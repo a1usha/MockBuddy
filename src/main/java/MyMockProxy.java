@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This class is a test implementation of mock objects
+ * using java proxy api. It will be removed soon.
+ */
 public class MyMockProxy {
 
     private static MockInvocationHandler lastMockInvocationHandler;
