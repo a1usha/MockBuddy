@@ -1,18 +1,28 @@
 package ru.nsu.sd.MockBuddy.internal.handling;
 
+import ru.nsu.sd.MockBuddy.internal.matching.ArgumentMatcher;
+
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
 
 class DataHolder {
     private final Object[] args;
     private final Method method;
     private final Object retObj;
-    private final Boolean realMethod;
+    private final boolean realMethod;
 
-    DataHolder(Method method, Object[] args, Object retObj) {
+    private final boolean withMatchers;
+    private final List<ArgumentMatcher> localArgumentMatchersList;
+
+    DataHolder(Method method, Object[] args, Object retObj, List<ArgumentMatcher> localArgumentMatchersList) {
         this.args = args;
         this.method = method;
         this.retObj = retObj;
         this.realMethod = false;
+
+        this.localArgumentMatchersList = localArgumentMatchersList;
+        this.withMatchers = !(localArgumentMatchersList == null);
     }
 
     DataHolder(Method method, Object[] args, Object retObj, Boolean realMethod) {
@@ -20,6 +30,8 @@ class DataHolder {
         this.method = method;
         this.retObj = retObj;
         this.realMethod = realMethod;
+        this.localArgumentMatchersList = null;
+        this.withMatchers = false;
     }
 
     Object[] getArgs() {
@@ -34,7 +46,27 @@ class DataHolder {
         return retObj;
     }
 
-    Boolean getRealMethod() {
+    public List<ArgumentMatcher> getLocalArgumentMatchersList() {
+        return localArgumentMatchersList;
+    }
+
+    public boolean isWithMatchers() {
+        return withMatchers;
+    }
+
+    public boolean isRealMethod() {
         return realMethod;
+    }
+
+    @Override
+    public String toString() {
+        return "DataHolder{" +
+                "args=" + Arrays.toString(args) +
+                ", method=" + method +
+                ", retObj=" + retObj +
+                ", realMethod=" + realMethod +
+                ", withMatchers=" + withMatchers +
+                ", localArgumentMatchersList=" + localArgumentMatchersList +
+                "}";
     }
 }
