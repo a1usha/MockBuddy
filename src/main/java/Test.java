@@ -1,5 +1,9 @@
 public class Test {
 
+    public Test(int a) {
+
+    }
+
     public String boolTest(boolean b) {
         if (b) {
             return "True";

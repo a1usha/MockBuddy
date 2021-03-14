@@ -59,6 +59,36 @@ public class ArgumentMatchers {
         return 0;
     }
 
+    public static boolean equalsTo(boolean value) {
+        putMatcher(new EqualsMatcher(value));
+        return true;
+    }
+
+    public static byte equalsTo(byte value) {
+        putMatcher(new EqualsMatcher(value));
+        return 0;
+    }
+
+    public static double equalsTo(double value) {
+        putMatcher(new EqualsMatcher(value));
+        return 0;
+    }
+
+    public static float equalsTo(float value) {
+        putMatcher(new EqualsMatcher(value));
+        return 0;
+    }
+
+    public static long equalsTo(long value) {
+        putMatcher(new EqualsMatcher(value));
+        return 0;
+    }
+
+    public static short equalsTo(short value) {
+        putMatcher(new EqualsMatcher(value));
+        return 0;
+    }
+
     public static int and(int first, int second) {
         try {
             MockingInfo.getArgumentMatcherStorage().performAnd();
