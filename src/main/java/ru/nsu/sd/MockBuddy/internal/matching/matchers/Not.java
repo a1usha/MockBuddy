@@ -1,6 +1,6 @@
 package ru.nsu.sd.MockBuddy.internal.matching.matchers;
 
-public class Not implements ArgumentMatcher{
+public class Not implements ArgumentMatcher {
 
     private final ArgumentMatcher m1;
 

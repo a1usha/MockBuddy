@@ -5,8 +5,8 @@ import ru.nsu.sd.MockBuddy.internal.matching.ArgumentMatcherStorage;
 
 public class MockingInfo {
 
-    private static MockInvocationHandler lastMockInvocationHandler;
     private static final ArgumentMatcherStorage argumentMatcherStorage;
+    private static MockInvocationHandler lastMockInvocationHandler;
 
     static {
         lastMockInvocationHandler = new MockInvocationHandler();
