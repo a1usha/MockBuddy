@@ -1,18 +1,16 @@
-public class Test implements TestInterface {
+public class Test {
 
 
 
-    @Override
-    public String foo() {
+
+    public String foo(Integer num) {
         return "Foo";
     }
 
-    @Override
-    public Integer bar(Integer num) {
+    public Integer bar(Integer num, int baz) {
         return num;
     }
 
-    @Override
     public void tmp() {
 
     }
