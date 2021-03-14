@@ -3,8 +3,6 @@ package ru.nsu.sd.MockBuddy;
 import ru.nsu.sd.MockBuddy.internal.MockBuddyCore;
 import ru.nsu.sd.MockBuddy.internal.stubbing.Stubber;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class MockBuddy {
 
     private static final MockBuddyCore mockBuddyCore;
@@ -13,7 +11,7 @@ public class MockBuddy {
         mockBuddyCore = new MockBuddyCore();
     }
 
-    public static <T> T mock(Class<T> clazz) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    public static <T> T mock(Class<T> clazz) {
         return mockBuddyCore.mock(clazz);
     }
 

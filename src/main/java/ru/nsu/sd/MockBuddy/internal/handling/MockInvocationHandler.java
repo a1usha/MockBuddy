@@ -1,8 +1,11 @@
 package ru.nsu.sd.MockBuddy.internal.handling;
 
-import net.bytebuddy.implementation.bind.annotation.*;
+import net.bytebuddy.implementation.bind.annotation.AllArguments;
+import net.bytebuddy.implementation.bind.annotation.Origin;
+import net.bytebuddy.implementation.bind.annotation.RuntimeType;
+import net.bytebuddy.implementation.bind.annotation.SuperCall;
 import ru.nsu.sd.MockBuddy.internal.MockingInfo;
-import ru.nsu.sd.MockBuddy.internal.matching.ArgumentMatcher;
+import ru.nsu.sd.MockBuddy.internal.matching.matchers.ArgumentMatcher;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -12,9 +15,9 @@ import java.util.concurrent.Callable;
 
 public class MockInvocationHandler {
 
+    private final List<DataHolder> dataHolders = new ArrayList<>();
     private Method lastMethod;
     private Object[] lastArgs;
-    private final List<DataHolder> dataHolders = new ArrayList<>();
 
     @RuntimeType
     public Object invoke(@SuperCall Callable<?> zuper, @Origin Method method, @AllArguments Object[] args) throws Throwable {
@@ -23,7 +26,7 @@ public class MockInvocationHandler {
 //        System.out.println(argumentMatchersList);
 //        System.out.println(Arrays.toString(args));
 
-        System.out.println(dataHolders);
+//        System.out.println(dataHolders);
 
         lastMethod = method;
         lastArgs = args;
@@ -79,12 +82,14 @@ public class MockInvocationHandler {
         List<ArgumentMatcher> argumentMatchersList = MockingInfo.getArgumentMatcherStorage().pullMatchers();
         if (argumentMatchersList != null) {
 
-                if (argumentMatchersList.size() == lastArgs.length) {
-                    // Save matchers
-                    dataHolders.add(new DataHolder(lastMethod, lastArgs, retObj, argumentMatchersList));
-                } else {
-                    throw new IllegalArgumentException("Use only ALL arguments as matchers, or ALL regular values");
-                }
+            if (argumentMatchersList.size() == lastArgs.length) {
+                // Save matchers
+                dataHolders.add(new DataHolder(lastMethod, lastArgs, retObj, argumentMatchersList));
+            } else {
+                System.out.println(argumentMatchersList);
+                System.out.println(lastArgs.length);
+                throw new IllegalArgumentException("Use only ALL arguments as matchers, or ALL regular values");
+            }
 
         } else {
             dataHolders.add(new DataHolder(lastMethod, lastArgs, retObj, (List<ArgumentMatcher>) null));

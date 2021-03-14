@@ -1,4 +1,4 @@
-package ru.nsu.sd.MockBuddy.internal.matching;
+package ru.nsu.sd.MockBuddy.internal.matching.matchers;
 
 public class EqualsMatcher implements ArgumentMatcher {
 
@@ -21,5 +21,12 @@ public class EqualsMatcher implements ArgumentMatcher {
         } else {
             return o1.equals(o2);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "EqualsMatcher{" +
+                "wanted=" + wanted +
+                '}';
     }
 }
