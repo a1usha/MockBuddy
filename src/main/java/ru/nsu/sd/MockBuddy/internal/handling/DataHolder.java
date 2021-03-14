@@ -1,6 +1,6 @@
 package ru.nsu.sd.MockBuddy.internal.handling;
 
-import ru.nsu.sd.MockBuddy.internal.matching.ArgumentMatcher;
+import ru.nsu.sd.MockBuddy.internal.matching.matchers.ArgumentMatcher;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;

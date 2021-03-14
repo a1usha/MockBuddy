@@ -1,4 +1,4 @@
-package ru.nsu.sd.MockBuddy.internal.matching;
+package ru.nsu.sd.MockBuddy.internal.matching.matchers;
 
 public class InstanceMatcher implements ArgumentMatcher {
 

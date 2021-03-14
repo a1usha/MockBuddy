@@ -2,7 +2,7 @@ package ru.nsu.sd.MockBuddy.internal.handling;
 
 import net.bytebuddy.implementation.bind.annotation.*;
 import ru.nsu.sd.MockBuddy.internal.MockingInfo;
-import ru.nsu.sd.MockBuddy.internal.matching.ArgumentMatcher;
+import ru.nsu.sd.MockBuddy.internal.matching.matchers.ArgumentMatcher;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class MockInvocationHandler {
 //        System.out.println(argumentMatchersList);
 //        System.out.println(Arrays.toString(args));
 
-        System.out.println(dataHolders);
+//        System.out.println(dataHolders);
 
         lastMethod = method;
         lastArgs = args;
@@ -83,6 +83,8 @@ public class MockInvocationHandler {
                     // Save matchers
                     dataHolders.add(new DataHolder(lastMethod, lastArgs, retObj, argumentMatchersList));
                 } else {
+                    System.out.println(argumentMatchersList);
+                    System.out.println(lastArgs.length);
                     throw new IllegalArgumentException("Use only ALL arguments as matchers, or ALL regular values");
                 }
 
