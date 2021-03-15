@@ -1,5 +1,8 @@
 package ru.nsu.sd.MockBuddy.internal.matching.matchers;
 
+/**
+ * Performs logical AND with argument matchers
+ */
 public class And implements ArgumentMatcher {
 
     private final ArgumentMatcher m1;

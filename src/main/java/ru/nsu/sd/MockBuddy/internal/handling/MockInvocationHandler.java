@@ -13,6 +13,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+/**
+ * Method invocation handler.
+ * Retains the desired behavior of the method or returns it
+ * according to the method, arguments and argument matchers.
+ */
 public class MockInvocationHandler {
 
     private final List<DataHolder> dataHolders = new ArrayList<>();
@@ -22,18 +27,8 @@ public class MockInvocationHandler {
     @RuntimeType
     public Object invoke(@SuperCall Callable<?> zuper, @Origin Method method, @AllArguments Object[] args) throws Throwable {
 
-//        List<ArgumentMatcher> argumentMatchersList = MockingInfo.getArgumentMatcherStorage().pullMatchers();
-//        System.out.println(argumentMatchersList);
-//        System.out.println(Arrays.toString(args));
-
-//        System.out.println(dataHolders);
-
         lastMethod = method;
         lastArgs = args;
-
-
-//        MockingInfo.setLastMockInvocationHandler(this);
-
 
         // checks if the method was already called with the given arguments
         for (DataHolder dataHolder : dataHolders) {
@@ -41,33 +36,31 @@ public class MockInvocationHandler {
                 if (Arrays.deepEquals(dataHolder.getArgs(), args)) {
 
                     if (dataHolder.isRealMethod()) {
-                        System.out.println("real method");
                         return zuper.call();
                     } else {
                         return dataHolder.getRetObj();
                     }
-
                 }
             }
         }
 
         for (DataHolder dataHolder : dataHolders) {
+            if (dataHolder.getMethod().equals(method)) {
+                if (dataHolder.isWithMatchers()) {
+                    if (MockingInfo.getArgumentMatcherStorage().getMatcherStack().empty()) {
 
-            if (dataHolder.isWithMatchers()) {
-                if (MockingInfo.getArgumentMatcherStorage().getMatcherStack().empty()) {
+                        boolean match;
+                        for (int i = 0; i < args.length; i++) {
 
-                    boolean match;
-                    for (int i = 0; i < args.length; i++) {
+                            match = dataHolder.getLocalArgumentMatchersList().get(i).matches(lastArgs[i]);
+                            if (!match) return null;
+                        }
+                        return dataHolder.getRetObj();
 
-                        match = dataHolder.getLocalArgumentMatchersList().get(i).matches(lastArgs[i]);
-                        if (!match) return null;
+                    } else {
+                        // Override matcher
+                        return null;
                     }
-
-                    return dataHolder.getRetObj();
-
-                } else {
-                    // Override matcher
-                    return null;
                 }
             }
         }

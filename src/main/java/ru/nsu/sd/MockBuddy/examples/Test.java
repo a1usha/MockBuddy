@@ -1,3 +1,5 @@
+package ru.nsu.sd.MockBuddy.examples;
+
 public class Test {
 
     public Test(int a) {
@@ -20,7 +22,7 @@ public class Test {
         return num;
     }
 
-    public void tmp() {
-
+    public String tmp() {
+        return "Baz";
     }
 }

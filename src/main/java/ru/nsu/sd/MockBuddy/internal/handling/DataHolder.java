@@ -6,6 +6,12 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Storage of specified behavior for mock object methods.
+ * Is a single entry for one method.
+ * It stores the full name of the method, the arguments with
+ * which it was called, matchers and the corresponding flags.
+ */
 class DataHolder {
     private final Object[] args;
     private final Method method;

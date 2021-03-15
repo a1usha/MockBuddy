@@ -1,5 +1,8 @@
 package ru.nsu.sd.MockBuddy.internal.matching.matchers;
 
+/**
+ * Checks if an argument is equal to some value
+ */
 public class EqualsMatcher implements ArgumentMatcher {
 
     private final Object wanted;

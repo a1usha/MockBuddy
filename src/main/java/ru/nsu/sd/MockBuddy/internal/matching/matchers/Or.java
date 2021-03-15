@@ -1,5 +1,9 @@
 package ru.nsu.sd.MockBuddy.internal.matching.matchers;
 
+
+/**
+ * Performs logical OR with argument matchers
+ */
 public class Or implements ArgumentMatcher {
 
     private final ArgumentMatcher m1;

@@ -8,6 +8,10 @@ import org.objenesis.ObjenesisStd;
 import org.objenesis.instantiator.ObjectInstantiator;
 import ru.nsu.sd.MockBuddy.internal.handling.MockInvocationHandler;
 
+/**
+ * Creates a mock object using an apple.
+ * The object is instantiated without calling the constructor
+ */
 public class ByteBuddyMockMaker {
 
     public static <T> T mock(Class<T> clazz, MockInvocationHandler mockInvocationHandler) {

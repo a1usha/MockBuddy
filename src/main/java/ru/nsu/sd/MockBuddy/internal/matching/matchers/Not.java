@@ -1,5 +1,8 @@
 package ru.nsu.sd.MockBuddy.internal.matching.matchers;
 
+/**
+ * Performs logical NOT with argument matchers
+ */
 public class Not implements ArgumentMatcher {
 
     private final ArgumentMatcher m1;
