@@ -1,11 +1,29 @@
 package ru.nsu.sd.MockBuddy.examples;
 
 import ru.nsu.sd.MockBuddy.MockBuddy;
+import ru.nsu.sd.MockBuddy.internal.annotations.Annotations;
+import ru.nsu.sd.MockBuddy.internal.annotations.MockBuddyAnnotation;
+
 import static ru.nsu.sd.MockBuddy.internal.matching.ArgumentMatchers.*;
 
 public class Main {
 
+    @MockBuddyAnnotation
+    private A a;
+
+    @MockBuddyAnnotation
+    private B b;
+
     public static void main(String[] args) {
+
+        Main main = new Main();
+        main.test();
+
+    }
+
+    private void test() {
+
+        Annotations.parse(this);
 
         Test test = MockBuddy.mock(Test.class);
 
@@ -26,9 +44,6 @@ public class Main {
         MockBuddy.when(test.tmp()).thenReturn("Mock_2");
         System.out.println(test.tmp()); // Mock_2
 
-
-        A a = MockBuddy.mock(A.class);
-        B b = MockBuddy.mock(B.class);
         C c = new C();
 
         c.setA(a);
@@ -38,5 +53,6 @@ public class Main {
         MockBuddy.when(b.say()).thenReturn("Mock_B");
 
         System.out.println(c.sayAll()); // Mock_A Mock_B
+
     }
 }
