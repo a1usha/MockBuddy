@@ -1,13 +1,34 @@
 package ru.nsu.sd.MockBuddy.examples;
 
 import ru.nsu.sd.MockBuddy.MockBuddy;
+import ru.nsu.sd.MockBuddy.internal.annotations.Annotations;
+import ru.nsu.sd.MockBuddy.internal.annotations.MockBuddyAnnotation;
+
 import static ru.nsu.sd.MockBuddy.internal.matching.ArgumentMatchers.*;
 
 public class Main {
 
+    @MockBuddyAnnotation()
+    private Test test;
+
+    @MockBuddyAnnotation()
+    private A a;
+
+    @MockBuddyAnnotation()
+    private B b;
+
     public static void main(String[] args) {
 
-        Test test = MockBuddy.mock(Test.class);
+        Main main = new Main();
+        main.test();
+
+    }
+
+    public void test() {
+
+        Annotations.parse(this);
+
+//        Test test = MockBuddy.mock(Test.class);
 
         // (5 or 9) & (not (9 or 2) or 11) -> 5
         MockBuddy.when(test.foo(and(or(equalsTo(5),equalsTo(9)), or(not(or(equalsTo(9),equalsTo(2))), equalsTo(11))))).thenReturn("Mocked");
@@ -27,8 +48,9 @@ public class Main {
         System.out.println(test.tmp()); // Mock_2
 
 
-        A a = MockBuddy.mock(A.class);
-        B b = MockBuddy.mock(B.class);
+//        A a = MockBuddy.mock(A.class);
+//        B b = MockBuddy.mock(B.class);
+
         C c = new C();
 
         c.setA(a);
@@ -38,5 +60,6 @@ public class Main {
         MockBuddy.when(b.say()).thenReturn("Mock_B");
 
         System.out.println(c.sayAll()); // Mock_A Mock_B
+
     }
 }
