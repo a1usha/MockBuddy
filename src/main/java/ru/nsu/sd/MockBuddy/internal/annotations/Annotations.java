@@ -17,7 +17,6 @@ public class Annotations {
                     // make it accessible
                     field.setAccessible(true);
 
-                    //
                     field.set(instance, MockBuddy.mock(field.getType()));
 
                 } catch (IllegalAccessException e) {

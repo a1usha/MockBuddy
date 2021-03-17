@@ -1,7 +1,5 @@
 package ru.nsu.sd.MockBuddy.examples;
 
-import ru.nsu.sd.MockBuddy.internal.annotations.MockBuddyAnnotation;
-
 public class Test {
 
     public Test(int a) {

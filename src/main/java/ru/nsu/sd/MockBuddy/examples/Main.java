@@ -8,13 +8,10 @@ import static ru.nsu.sd.MockBuddy.internal.matching.ArgumentMatchers.*;
 
 public class Main {
 
-    @MockBuddyAnnotation()
-    private Test test;
-
-    @MockBuddyAnnotation()
+    @MockBuddyAnnotation
     private A a;
 
-    @MockBuddyAnnotation()
+    @MockBuddyAnnotation
     private B b;
 
     public static void main(String[] args) {
@@ -24,11 +21,11 @@ public class Main {
 
     }
 
-    public void test() {
+    private void test() {
 
         Annotations.parse(this);
 
-//        Test test = MockBuddy.mock(Test.class);
+        Test test = MockBuddy.mock(Test.class);
 
         // (5 or 9) & (not (9 or 2) or 11) -> 5
         MockBuddy.when(test.foo(and(or(equalsTo(5),equalsTo(9)), or(not(or(equalsTo(9),equalsTo(2))), equalsTo(11))))).thenReturn("Mocked");
@@ -46,10 +43,6 @@ public class Main {
         MockBuddy.when(test.tmp()).thenReturn("Mock_1");
         MockBuddy.when(test.tmp()).thenReturn("Mock_2");
         System.out.println(test.tmp()); // Mock_2
-
-
-//        A a = MockBuddy.mock(A.class);
-//        B b = MockBuddy.mock(B.class);
 
         C c = new C();
 
