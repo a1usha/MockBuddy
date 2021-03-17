@@ -1,17 +1,17 @@
 package ru.nsu.sd.MockBuddy.examples;
 
 import ru.nsu.sd.MockBuddy.MockBuddy;
-import ru.nsu.sd.MockBuddy.internal.annotations.Annotations;
-import ru.nsu.sd.MockBuddy.internal.annotations.MockBuddyAnnotation;
+import ru.nsu.sd.MockBuddy.internal.annotations.MockInitializer;
+import ru.nsu.sd.MockBuddy.internal.annotations.Mock;
 
 import static ru.nsu.sd.MockBuddy.internal.matching.ArgumentMatchers.*;
 
 public class Main {
 
-    @MockBuddyAnnotation
+    @Mock
     private A a;
 
-    @MockBuddyAnnotation
+    @Mock
     private B b;
 
     public static void main(String[] args) {
@@ -23,7 +23,7 @@ public class Main {
 
     private void test() {
 
-        Annotations.parse(this);
+        MockInitializer.initMocks(this);
 
         Test test = MockBuddy.mock(Test.class);
 
