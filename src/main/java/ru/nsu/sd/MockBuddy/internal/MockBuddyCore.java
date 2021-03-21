@@ -10,7 +10,7 @@ public class MockBuddyCore {
     }
 
     public <T> T spy(T obj) {
-        return ByteBuddyMockMaker.mock(obj, MockingInfo.getLastMockInvocationHandler());
+        return ByteBuddyMockMaker.spy(obj, MockingInfo.getLastMockInvocationHandler());
     }
 
     public <T> Stubber<T> when(T obj) {
