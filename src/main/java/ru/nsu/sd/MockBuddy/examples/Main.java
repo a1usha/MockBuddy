@@ -3,6 +3,7 @@ package ru.nsu.sd.MockBuddy.examples;
 import ru.nsu.sd.MockBuddy.MockBuddy;
 import ru.nsu.sd.MockBuddy.internal.annotations.MockInitializer;
 import ru.nsu.sd.MockBuddy.internal.annotations.Mock;
+import ru.nsu.sd.MockBuddy.internal.annotations.Spy;
 
 import static ru.nsu.sd.MockBuddy.internal.matching.ArgumentMatchers.*;
 
@@ -13,6 +14,9 @@ public class Main {
 
     @Mock
     private B b;
+
+    @Spy
+    private Cat spytest = new Cat("kisa");
 
     public static void main(String[] args) {
 
@@ -26,9 +30,6 @@ public class Main {
         MockInitializer.initMocks(this);
 
         Test test = MockBuddy.mock(Test.class);
-
-        Cat test2 = new Cat("kisa");
-        Cat spytest = MockBuddy.spy(test2);
 
         MockBuddy.when(spytest.getCat()).invokeRealMethod();
         System.out.println(spytest.getCat());

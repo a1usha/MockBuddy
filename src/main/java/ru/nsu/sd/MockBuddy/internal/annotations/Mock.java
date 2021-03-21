@@ -14,6 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * Minimizes repetitive mock creation code.
  * Makes the test class more readable.
  *
+ * Example:
  * <pre><code class="java">
  *
  *
@@ -23,6 +24,4 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 @Target(FIELD)
 @Retention(RUNTIME)
-public @interface Mock {
-
-}
+public @interface Mock { }

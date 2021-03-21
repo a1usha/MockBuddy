@@ -4,11 +4,11 @@ import ru.nsu.sd.MockBuddy.MockBuddy;
 import java.lang.reflect.Field;
 
 /**
- * Initializes fields annotated with Mock annotations.
+ * Initializes fields annotated with Mock and Spy annotations.
  *
  * <pre><code>MockInitializer.initMock(this)</code></pre> method has to be called to initialize annotated fields.
  *
- * See examples in javadoc for {@link Mock} class.
+ * See examples in javadoc for {@link Mock} and {@link Spy} class.
  *
  */
 public class MockInitializer {
@@ -44,7 +44,7 @@ public class MockInitializer {
                     field.setAccessible(true);
 
                     // sets the field on the specified object argument to the specified new value.
-                    field.set(instance, MockBuddy.spy(field.get(field.getType())));
+                    field.set(instance, MockBuddy.spy(field.get(instance)));
 
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
