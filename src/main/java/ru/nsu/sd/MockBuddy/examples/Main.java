@@ -16,7 +16,10 @@ public class Main {
     private B b;
 
     @Spy
-    private Cat spytest = new Cat("kisa");
+    private Cat spytest = new Cat("cat");
+
+    @Spy
+    private Cat cat;
 
     public static void main(String[] args) {
 
@@ -31,8 +34,10 @@ public class Main {
 
         Test test = MockBuddy.mock(Test.class);
 
-        MockBuddy.when(spytest.getCat()).invokeRealMethod();
         System.out.println(spytest.getCat());
+
+        MockBuddy.when(spytest.performComputations(equalsTo(5), equalsTo(6))).thenReturn(5);
+        System.out.println(spytest.performComputations(5, 6));
 
         // (5 or 9) & (not (9 or 2) or 11) -> 5
         MockBuddy.when(test.foo(and(or(equalsTo(5),equalsTo(9)), or(not(or(equalsTo(9),equalsTo(2))), equalsTo(11))))).thenReturn("Mocked");
@@ -41,7 +46,7 @@ public class Main {
 
         MockBuddy.when(test.bar(anyInt(), or(equalsTo(123), equalsTo(333)))).thenReturn(11);
         System.out.println(test.bar(333, 123)); // 11
-        System.out.println(test.bar(555, 333)); // 11
+        System.out.println(test.bar(555, 444)); // Null
 
         MockBuddy.when(test.boolTest(true)).invokeRealMethod();
         System.out.println(test.boolTest(true));    // True

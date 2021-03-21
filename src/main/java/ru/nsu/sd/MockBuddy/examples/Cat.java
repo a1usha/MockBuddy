@@ -5,10 +5,6 @@ public class Cat {
     private String name;
     private Integer age;
 
-    public Cat() {
-
-    }
-
     public Cat(Integer age) {
         this.age = age;
     }
@@ -24,6 +20,10 @@ public class Cat {
 
     public String getCat() {
         return name;
+    }
+
+    public int performComputations(int a, int b) {
+        return a + b;
     }
 
     public void sayMeow() {

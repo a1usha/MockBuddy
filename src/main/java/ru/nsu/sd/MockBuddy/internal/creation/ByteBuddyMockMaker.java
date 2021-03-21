@@ -6,6 +6,8 @@ import net.bytebuddy.matcher.ElementMatchers;
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 import org.objenesis.instantiator.ObjectInstantiator;
+import ru.nsu.sd.MockBuddy.internal.MockingInfo;
+import ru.nsu.sd.MockBuddy.internal.handling.DelegationStrategy;
 import ru.nsu.sd.MockBuddy.internal.handling.MockInvocationHandler;
 
 import java.lang.reflect.Field;
@@ -16,11 +18,13 @@ import java.lang.reflect.Field;
  */
 public class ByteBuddyMockMaker {
 
-    public static <T> T mock(Class<T> clazz, MockInvocationHandler mockInvocationHandler) {
+    public static <T> T mock(Class<T> clazz, DelegationStrategy delegationStrategy) {
+        MockingInfo.setLastMockInvocationHandler(new MockInvocationHandler(delegationStrategy));
+
         Class<? extends T> byteBuddy = new ByteBuddy()
                 .subclass(clazz)
                 .method(ElementMatchers.any())
-                .intercept(MethodDelegation.to(mockInvocationHandler))
+                .intercept(MethodDelegation.to(MockingInfo.getLastMockInvocationHandler()))
                 .make()
                 .load(ClassLoader.getSystemClassLoader())
                 .getLoaded();
@@ -31,7 +35,6 @@ public class ByteBuddyMockMaker {
         return thingyInstantiator.newInstance();
     }
 
-
     /**
      * Creates a spy of the real object.
      * The spy calls real methods unless they are stubbed.
@@ -40,12 +43,13 @@ public class ByteBuddyMockMaker {
      * @return a spy of the real object
      */
     public static <T> T spy(T obj, MockInvocationHandler mockInvocationHandler) {
+        MockingInfo.setLastMockInvocationHandler(new MockInvocationHandler(DelegationStrategy.CALL_REAL_METHODS));
 
         @SuppressWarnings("unchecked")
         Class<? extends T> byteBuddy = new ByteBuddy()
                 .subclass((Class<T>) obj.getClass())
                 .method(ElementMatchers.any())
-                .intercept(MethodDelegation.to(mockInvocationHandler))
+                .intercept(MethodDelegation.to(MockingInfo.getLastMockInvocationHandler()))
                 .make()
                 .load(ClassLoader.getSystemClassLoader())
                 .getLoaded();
