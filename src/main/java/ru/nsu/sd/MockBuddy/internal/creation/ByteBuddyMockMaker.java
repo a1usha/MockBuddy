@@ -6,15 +6,9 @@ import net.bytebuddy.matcher.ElementMatchers;
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 import org.objenesis.instantiator.ObjectInstantiator;
-import ru.nsu.sd.MockBuddy.MockBuddy;
-import ru.nsu.sd.MockBuddy.examples.SpyTest;
-import ru.nsu.sd.MockBuddy.examples.Test;
-import ru.nsu.sd.MockBuddy.internal.annotations.Mock;
 import ru.nsu.sd.MockBuddy.internal.handling.MockInvocationHandler;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * Creates a mock object using ByteBuddy library.
@@ -38,131 +32,18 @@ public class ByteBuddyMockMaker {
     }
 
 
-    public static <T> T mock(T obj, MockInvocationHandler mockInvocationHandler) {
-
-        Field[] fields = obj.getClass().getDeclaredFields();
-
-//        for (Field field : fields) {
-//            field.setAccessible(true);
-//        }
+    /**
+     * Creates a spy of the real object.
+     * The spy calls real methods unless they are stubbed.
+     *
+     * @param obj real object to spy on
+     * @return a spy of the real object
+     */
+    public static <T> T spy(T obj, MockInvocationHandler mockInvocationHandler) {
 
         @SuppressWarnings("unchecked")
         Class<? extends T> byteBuddy = new ByteBuddy()
-                .subclass((Class<T>)obj.getClass())
-                .method(ElementMatchers.any())
-                .intercept(MethodDelegation.to(mockInvocationHandler))
-                .make()
-                .load(ClassLoader.getSystemClassLoader())
-                .getLoaded();
-
-//        Objenesis objenesis = new ObjenesisStd();
-//        ObjectInstantiator thingyInstantiator = objenesis.getInstantiatorOf(byteBuddy);
-//        @SuppressWarnings("unchecked")
-//        T instance = (T) thingyInstantiator.newInstance();
-
-        T instance = null;
-        try {
-            instance = byteBuddy.getConstructor().newInstance();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-
-
-        fields = obj.getClass().getDeclaredFields();
-
-        for (Field field : fields) {
-            System.out.println(field);
-
-        }
-
-        System.out.println("l");
-
-        fields = instance.getClass().getDeclaredFields();
-
-        for (Field field : fields) {
-            System.out.println(field);
-
-        }
-
-
-//        Objenesis objenesis = new ObjenesisStd();
-//        ObjectInstantiator thingyInstantiator = objenesis.getInstantiatorOf(byteBuddy);
-//        Object instance = thingyInstantiator.newInstance();
-////        Object instance = byteBuddy;
-//
-//        Field[] fields = obj.getClass().getDeclaredFields();
-//
-//        for (Field field : fields) {
-//
-//            try {
-//
-//                field.setAccessible(true);
-//
-//                Object value = field.get(obj);
-//
-//                if (value != null) {
-//                    System.out.println(field.getName() + "=" + value);
-//                }
-//
-//                Field fieldInstance = instance.getClass().getDeclaredField(field.getName());
-//                fieldInstance.setAccessible(true);
-//
-//                fieldInstance.set(instance, value);
-//
-//            } catch (IllegalAccessException | NoSuchFieldException e) {
-//                e.printStackTrace();
-//            }
-//
-//        }
-//
-//        System.out.println("heheh new obj");
-//
-//        Field[] fieldsinst = instance.getClass().getDeclaredFields();
-//
-//        for (Field field : fieldsinst) {
-//
-//            try {
-//
-//                field.setAccessible(true);
-//
-//                Object value = field.get(obj);
-//
-//                if (value != null) {
-//                    System.out.println(field.getName() + "=" + value);
-//                }
-//
-//            } catch (IllegalAccessException e) {
-//                e.printStackTrace();
-//            }
-//
-//        }
-//
-//        System.out.println("all fields");
-//
-//        fieldsinst = instance.getClass().getFields();
-//
-//        for (Field field : fieldsinst) {
-//
-//            try {
-//
-//                field.setAccessible(true);
-//
-//                Object value = field.get(obj);
-//
-//                if (value != null) {
-//                    System.out.println(field.getName() + "=" + value);
-//                }
-//
-//            } catch (IllegalAccessException e) {
-//                e.printStackTrace();
-//            }
-//
-//        }
-
-
-        @SuppressWarnings("unchecked")
-        Class<? extends T> byteBuddy2 = new ByteBuddy()
-                .subclass((Class<T>) SpyTest.class)
+                .subclass((Class<T>) obj.getClass())
                 .method(ElementMatchers.any())
                 .intercept(MethodDelegation.to(mockInvocationHandler))
                 .make()
@@ -170,11 +51,39 @@ public class ByteBuddyMockMaker {
                 .getLoaded();
 
         // Create object without calling constructor
-        Objenesis objenesis2 = new ObjenesisStd();
-        ObjectInstantiator<? extends T> thingyInstantiator2 = objenesis2.getInstantiatorOf(byteBuddy2);
-        return thingyInstantiator2.newInstance();
+        Objenesis objenesis = new ObjenesisStd();
+        ObjectInstantiator<? extends T> thingyInstantiator = objenesis.getInstantiatorOf(byteBuddy);
+        T instance = (T) thingyInstantiator.newInstance();
+
+        // Get an array of Field objects reflecting all the fields declared by the class
+        Field[] fields = obj.getClass().getDeclaredFields();
+
+        for (Field field : fields) {
+            try {
+
+                // make it accessible
+                field.setAccessible(true);
+
+                // get the value of the field
+                Object value = field.get(obj);
+
+                // if value is not null, save it to the same field of the created object
+                if (value != null) {
+
+                    Field fieldInstance = instance.getClass().getSuperclass().getDeclaredField(field.getName());
+                    fieldInstance.setAccessible(true);
+
+                    fieldInstance.set(instance, value);
+
+                }
+
+            } catch (IllegalAccessException | NoSuchFieldException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return instance;
 
     }
-
 }
 
