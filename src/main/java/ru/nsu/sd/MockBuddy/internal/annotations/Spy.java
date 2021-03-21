@@ -7,12 +7,7 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- *
- * Mark a field as a mock.
- *
- * Allows shorthand mock creation.
- * Minimizes repetitive mock creation code.
- * Makes the test class more readable.
+ * Allows shorthand wrapping of field instances in an spy object.
  *
  * Example:
  * <pre><code class="java">
@@ -24,4 +19,4 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 @Target(FIELD)
 @Retention(RUNTIME)
-public @interface Mock { }
+public @interface Spy { }

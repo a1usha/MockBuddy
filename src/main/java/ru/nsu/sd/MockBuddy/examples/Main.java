@@ -3,6 +3,7 @@ package ru.nsu.sd.MockBuddy.examples;
 import ru.nsu.sd.MockBuddy.MockBuddy;
 import ru.nsu.sd.MockBuddy.internal.annotations.MockInitializer;
 import ru.nsu.sd.MockBuddy.internal.annotations.Mock;
+import ru.nsu.sd.MockBuddy.internal.annotations.Spy;
 
 import static ru.nsu.sd.MockBuddy.internal.matching.ArgumentMatchers.*;
 
@@ -13,6 +14,9 @@ public class Main {
 
     @Mock
     private B b;
+
+    @Spy
+    private Cat spytest = new Cat("kisa");
 
     public static void main(String[] args) {
 
@@ -26,6 +30,9 @@ public class Main {
         MockInitializer.initMocks(this);
 
         Test test = MockBuddy.mock(Test.class);
+
+        MockBuddy.when(spytest.getCat()).invokeRealMethod();
+        System.out.println(spytest.getCat());
 
         // (5 or 9) & (not (9 or 2) or 11) -> 5
         MockBuddy.when(test.foo(and(or(equalsTo(5),equalsTo(9)), or(not(or(equalsTo(9),equalsTo(2))), equalsTo(11))))).thenReturn("Mocked");
