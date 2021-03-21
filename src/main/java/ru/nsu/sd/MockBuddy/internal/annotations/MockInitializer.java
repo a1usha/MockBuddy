@@ -36,7 +36,22 @@ public class MockInitializer {
                     e.printStackTrace();
                 }
 
+            } else if (field.isAnnotationPresent(Spy.class)) {
+
+                try {
+
+                    // make it accessible
+                    field.setAccessible(true);
+
+                    // sets the field on the specified object argument to the specified new value.
+                    field.set(instance, MockBuddy.spy(field.get(field.getType())));
+
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
+
+
 }
