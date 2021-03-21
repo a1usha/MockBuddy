@@ -19,6 +19,10 @@ public class MockBuddy {
         return mockBuddyCore.spy(obj);
     }
 
+    public static <T> T spy(Class<T> clazz) {
+        return mockBuddyCore.spy(clazz);
+    }
+
     public static <T> Stubber<T> when(T obj) {
         return mockBuddyCore.when(obj);
     }

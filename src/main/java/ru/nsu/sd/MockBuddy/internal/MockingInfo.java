@@ -9,7 +9,6 @@ public class MockingInfo {
     private static MockInvocationHandler lastMockInvocationHandler;
 
     static {
-        lastMockInvocationHandler = new MockInvocationHandler();
         argumentMatcherStorage = new ArgumentMatcherStorage();
     }
 

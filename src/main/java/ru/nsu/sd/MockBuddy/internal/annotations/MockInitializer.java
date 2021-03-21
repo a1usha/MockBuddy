@@ -44,7 +44,10 @@ public class MockInitializer {
                     field.setAccessible(true);
 
                     // sets the field on the specified object argument to the specified new value.
-                    field.set(instance, MockBuddy.spy(field.get(instance)));
+                    if (field.get(instance) != null)
+                        field.set(instance, MockBuddy.spy(field.get(instance)));
+                    else
+                        field.set(instance, MockBuddy.spy(field.getType()));
 
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();

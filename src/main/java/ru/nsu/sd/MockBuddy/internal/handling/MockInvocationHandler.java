@@ -23,9 +23,15 @@ public class MockInvocationHandler {
     private final List<DataHolder> dataHolders = new ArrayList<>();
     private Method lastMethod;
     private Object[] lastArgs;
+    private final DelegationStrategy delegationStrategy;
+
+    public MockInvocationHandler(DelegationStrategy delegationStrategy) {
+        this.delegationStrategy = delegationStrategy;
+    }
 
     @RuntimeType
     public Object invoke(@SuperCall Callable<?> zuper, @Origin Method method, @AllArguments Object[] args) throws Throwable {
+        MockingInfo.setLastMockInvocationHandler(this);
 
         lastMethod = method;
         lastArgs = args;
@@ -53,7 +59,12 @@ public class MockInvocationHandler {
                         for (int i = 0; i < args.length; i++) {
 
                             match = dataHolder.getLocalArgumentMatchersList().get(i).matches(lastArgs[i]);
-                            if (!match) return null;
+                            if (!match) {
+                                if (delegationStrategy == DelegationStrategy.CALL_REAL_METHODS)
+                                    return zuper.call();
+                                else
+                                    return null;
+                            }
                         }
                         return dataHolder.getRetObj();
 
@@ -66,7 +77,10 @@ public class MockInvocationHandler {
         }
 
         // otherwise return null
-        return null;
+        if (delegationStrategy == DelegationStrategy.CALL_REAL_METHODS)
+            return zuper.call();
+        else
+            return null;
     }
 
     public void setRetObj(Object retObj) {
