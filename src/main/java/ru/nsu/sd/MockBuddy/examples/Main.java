@@ -21,6 +21,9 @@ public class Main {
     @Spy
     private Cat cat;
 
+    @Spy
+    private FieldTest ftest = new FieldTest("final field", "static field");
+
     public static void main(String[] args) {
 
         Main main = new Main();
@@ -31,6 +34,8 @@ public class Main {
     private void test() {
 
         MockInitializer.initMocks(this);
+
+        System.out.println(ftest.getFnStr());
 
         Test test = MockBuddy.mock(Test.class);
 
