@@ -11,7 +11,7 @@ public class MockBuddyCore {
     }
 
     public <T> T spy(Class<T> clazz) {
-        return ByteBuddyMockMaker.mock(clazz, DelegationStrategy.CALL_REAL_METHODS);
+        return ByteBuddyMockMaker.mock(clazz, DelegationStrategy.CALL_REAL_METHOD);
     }
 
     public <T> T spy(T obj) {

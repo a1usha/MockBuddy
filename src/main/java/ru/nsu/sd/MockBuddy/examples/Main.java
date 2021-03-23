@@ -1,9 +1,12 @@
 package ru.nsu.sd.MockBuddy.examples;
 
 import ru.nsu.sd.MockBuddy.MockBuddy;
+import ru.nsu.sd.MockBuddy.internal.MockingInfo;
 import ru.nsu.sd.MockBuddy.internal.annotations.MockInitializer;
 import ru.nsu.sd.MockBuddy.internal.annotations.Mock;
 import ru.nsu.sd.MockBuddy.internal.annotations.Spy;
+
+import java.util.InvalidPropertiesFormatException;
 
 import static ru.nsu.sd.MockBuddy.internal.matching.ArgumentMatchers.*;
 
@@ -22,6 +25,7 @@ public class Main {
     private Cat cat;
 
     @Spy
+
     private FieldTest ftest = new FieldTest("final field", "static field");
 
     public static void main(String[] args) {
@@ -38,6 +42,24 @@ public class Main {
         System.out.println(ftest.getFnStr());
 
         Test test = MockBuddy.mock(Test.class);
+
+        MockBuddy.when(test.foo(or(equalsTo(35), equalsTo(89)))).thenThrow(new IllegalArgumentException("Exception occurred"));
+
+        try {
+            test.foo(89);
+        } catch (Throwable t) {
+            System.out.println(t.getMessage());
+        }
+
+        MockBuddy.when(cat.getCat()).thenThrow(new ArithmeticException("Cat exception"));
+
+        try {
+            cat.getCat();
+        } catch (Throwable t) {
+            System.out.println(t.getMessage());
+        }
+
+        System.out.println(fieldTest.getFnStr());
 
         System.out.println(spytest.getCat());
 

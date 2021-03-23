@@ -18,7 +18,7 @@ public class FieldTest {
     public static String getStStr() {
         return stStr;
     }
-
+  
     public String getFnStr() {
         return fnStr;
     }
