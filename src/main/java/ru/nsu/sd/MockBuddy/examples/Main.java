@@ -25,7 +25,8 @@ public class Main {
     private Cat cat;
 
     @Spy
-    private FieldTest fieldTest = new FieldTest("Final string");
+
+    private FieldTest ftest = new FieldTest("final field", "static field");
 
     public static void main(String[] args) {
 
@@ -37,6 +38,8 @@ public class Main {
     private void test() {
 
         MockInitializer.initMocks(this);
+
+        System.out.println(ftest.getFnStr());
 
         Test test = MockBuddy.mock(Test.class);
 

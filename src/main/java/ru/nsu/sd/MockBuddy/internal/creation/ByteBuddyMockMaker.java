@@ -11,6 +11,7 @@ import ru.nsu.sd.MockBuddy.internal.handling.DelegationStrategy;
 import ru.nsu.sd.MockBuddy.internal.handling.MockInvocationHandler;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 /**
  * Creates a mock object using ByteBuddy library.
@@ -67,6 +68,10 @@ public class ByteBuddyMockMaker {
 
                 // make it accessible
                 field.setAccessible(true);
+
+                if (Modifier.isFinal(field.getModifiers()) && Modifier.isStatic(field.getModifiers())) {
+                    continue;
+                }
 
                 // get the value of the field
                 Object value = field.get(obj);
