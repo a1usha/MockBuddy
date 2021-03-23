@@ -43,7 +43,7 @@ public class ByteBuddyMockMaker {
      * @return a spy of the real object
      */
     public static <T> T spy(T obj, MockInvocationHandler mockInvocationHandler) {
-        MockingInfo.setLastMockInvocationHandler(new MockInvocationHandler(DelegationStrategy.CALL_REAL_METHODS));
+        MockingInfo.setLastMockInvocationHandler(new MockInvocationHandler(DelegationStrategy.CALL_REAL_METHOD));
 
         @SuppressWarnings("unchecked")
         Class<? extends T> byteBuddy = new ByteBuddy()

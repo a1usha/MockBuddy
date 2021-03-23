@@ -31,6 +31,7 @@ public class MockInvocationHandler {
 
     @RuntimeType
     public Object invoke(@SuperCall Callable<?> zuper, @Origin Method method, @AllArguments Object[] args) throws Throwable {
+
         MockingInfo.setLastMockInvocationHandler(this);
 
         lastMethod = method;
@@ -38,13 +39,18 @@ public class MockInvocationHandler {
 
         // checks if the method was already called with the given arguments
         for (DataHolder dataHolder : dataHolders) {
-            if (dataHolder.getMethod().equals(method)) {
-                if (Arrays.deepEquals(dataHolder.getArgs(), args)) {
+            if (dataHolder.getMethod().equals(method) && Arrays.deepEquals(dataHolder.getArgs(), args)) {
+                if (!dataHolder.isWithMatchers()) {
+                    switch (dataHolder.getDelegationStrategy()) {
+                        case CALL_REAL_METHOD:
+                            return zuper.call();
 
-                    if (dataHolder.isRealMethod()) {
-                        return zuper.call();
-                    } else {
-                        return dataHolder.getRetObj();
+                        case THROW_EXCEPTION:
+                            throw dataHolder.getToThrow();
+
+                        case RETURN_CUSTOM:
+                            return dataHolder.getRetObj();
+
                     }
                 }
             }
@@ -60,13 +66,24 @@ public class MockInvocationHandler {
 
                             match = dataHolder.getLocalArgumentMatchersList().get(i).matches(lastArgs[i]);
                             if (!match) {
-                                if (delegationStrategy == DelegationStrategy.CALL_REAL_METHODS)
+                                if (delegationStrategy == DelegationStrategy.CALL_REAL_METHOD)
                                     return zuper.call();
                                 else
                                     return null;
                             }
                         }
-                        return dataHolder.getRetObj();
+
+                        switch (dataHolder.getDelegationStrategy()) {
+                            case CALL_REAL_METHOD:
+                                return zuper.call();
+
+                            case THROW_EXCEPTION:
+                                throw dataHolder.getToThrow();
+
+                            case RETURN_CUSTOM:
+                                return dataHolder.getRetObj();
+
+                        }
 
                     } else {
                         // Override matcher
@@ -77,35 +94,75 @@ public class MockInvocationHandler {
         }
 
         // otherwise return null
-        if (delegationStrategy == DelegationStrategy.CALL_REAL_METHODS)
+        if (delegationStrategy == DelegationStrategy.CALL_REAL_METHOD)
             return zuper.call();
         else
             return null;
     }
 
     public void setRetObj(Object retObj) {
+
+        // Remove existing rule with same method and arguments
         dataHolders.removeIf(dh -> dh.getMethod().equals(lastMethod) && Arrays.deepEquals(dh.getArgs(), lastArgs));
 
+        // Pull argument matchers from argument matcher storage
         List<ArgumentMatcher> argumentMatchersList = MockingInfo.getArgumentMatcherStorage().pullMatchers();
-        if (argumentMatchersList != null) {
 
+        if (argumentMatchersList != null) {
+            // If argument matchers is not null, then create rule with matching
             if (argumentMatchersList.size() == lastArgs.length) {
-                // Save matchers
                 dataHolders.add(new DataHolder(lastMethod, lastArgs, retObj, argumentMatchersList));
             } else {
-                System.out.println(argumentMatchersList);
-                System.out.println(lastArgs.length);
                 throw new IllegalArgumentException("Use only ALL arguments as matchers, or ALL regular values");
             }
 
         } else {
-            dataHolders.add(new DataHolder(lastMethod, lastArgs, retObj, (List<ArgumentMatcher>) null));
+            // Else create default rule with return object
+            dataHolders.add(new DataHolder(lastMethod, lastArgs, retObj));
+        }
+    }
+
+    public void setThrowable(Throwable throwable) {
+
+        // Remove existing rule with same method and arguments
+        dataHolders.removeIf(dh -> dh.getMethod().equals(lastMethod) && Arrays.deepEquals(dh.getArgs(), lastArgs));
+
+        // Pull argument matchers from argument matcher storage
+        List<ArgumentMatcher> argumentMatchersList = MockingInfo.getArgumentMatcherStorage().pullMatchers();
+
+        if (argumentMatchersList != null) {
+            // If argument matchers is not null, then create rule with matching
+            if (argumentMatchersList.size() == lastArgs.length) {
+                dataHolders.add(new DataHolder(lastMethod, lastArgs, argumentMatchersList, throwable));
+            } else {
+                throw new IllegalArgumentException("Use only ALL arguments as matchers, or ALL regular values");
+            }
+
+        } else {
+            // Else create default rule with return object
+            dataHolders.add(new DataHolder(lastMethod, lastArgs, throwable));
         }
     }
 
     public void setRealMethodInvocation() {
-        MockingInfo.getArgumentMatcherStorage().pullMatchers();
+
+        // Remove existing rule with same method and arguments
         dataHolders.removeIf(dh -> dh.getMethod().equals(lastMethod) && Arrays.deepEquals(dh.getArgs(), lastArgs));
-        dataHolders.add(new DataHolder(lastMethod, lastArgs, null, true));
+
+        // Pull argument matchers from argument matcher storage
+        List<ArgumentMatcher> argumentMatchersList = MockingInfo.getArgumentMatcherStorage().pullMatchers();
+
+        if (argumentMatchersList != null) {
+            // If argument matchers is not null, then create rule with matching
+            if (argumentMatchersList.size() == lastArgs.length) {
+                dataHolders.add(new DataHolder(lastMethod, lastArgs, argumentMatchersList));
+            } else {
+                throw new IllegalArgumentException("Use only ALL arguments as matchers, or ALL regular values");
+            }
+
+        } else {
+            // Else create default rule with return object
+            dataHolders.add(new DataHolder(lastMethod, lastArgs));
+        }
     }
 }

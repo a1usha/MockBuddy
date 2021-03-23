@@ -16,28 +16,83 @@ class DataHolder {
     private final Object[] args;
     private final Method method;
     private final Object retObj;
-    private final boolean realMethod;
+    private final DelegationStrategy delegationStrategy;
 
     private final boolean withMatchers;
     private final List<ArgumentMatcher> localArgumentMatchersList;
+
+    private final Throwable toThrow;
 
     DataHolder(Method method, Object[] args, Object retObj, List<ArgumentMatcher> localArgumentMatchersList) {
         this.args = args;
         this.method = method;
         this.retObj = retObj;
-        this.realMethod = false;
+        this.delegationStrategy = DelegationStrategy.RETURN_CUSTOM;
 
         this.localArgumentMatchersList = localArgumentMatchersList;
         this.withMatchers = !(localArgumentMatchersList == null);
+
+        this.toThrow = null;
     }
 
-    DataHolder(Method method, Object[] args, Object retObj, Boolean realMethod) {
+    DataHolder(Method method, Object[] args, Object retObj) {
         this.args = args;
         this.method = method;
         this.retObj = retObj;
-        this.realMethod = realMethod;
+        this.delegationStrategy = DelegationStrategy.RETURN_CUSTOM;
+
         this.localArgumentMatchersList = null;
         this.withMatchers = false;
+
+        this.toThrow = null;
+    }
+
+    DataHolder(Method method, Object[] args, List<ArgumentMatcher> localArgumentMatchersList) {
+        this.args = args;
+        this.method = method;
+        this.retObj = null;
+        this.delegationStrategy = DelegationStrategy.CALL_REAL_METHOD;
+
+        this.localArgumentMatchersList = localArgumentMatchersList;
+        this.withMatchers = !(localArgumentMatchersList == null);
+
+        this.toThrow = null;
+    }
+
+    DataHolder(Method method, Object[] args) {
+        this.args = args;
+        this.method = method;
+        this.retObj = null;
+        this.delegationStrategy = DelegationStrategy.CALL_REAL_METHOD;
+
+        this.localArgumentMatchersList = null;
+        this.withMatchers = false;
+
+        this.toThrow = null;
+    }
+
+    DataHolder(Method method, Object[] args, List<ArgumentMatcher> localArgumentMatchersList, Throwable toThrow) {
+        this.args = args;
+        this.method = method;
+        this.retObj = null;
+        this.delegationStrategy = DelegationStrategy.THROW_EXCEPTION;
+
+        this.localArgumentMatchersList = localArgumentMatchersList;
+        this.withMatchers = !(localArgumentMatchersList == null);
+
+        this.toThrow = toThrow;
+    }
+
+    DataHolder(Method method, Object[] args, Throwable toThrow) {
+        this.args = args;
+        this.method = method;
+        this.retObj = null;
+        this.delegationStrategy = DelegationStrategy.THROW_EXCEPTION;
+
+        this.localArgumentMatchersList = null;
+        this.withMatchers = false;
+
+        this.toThrow = toThrow;
     }
 
     Object[] getArgs() {
@@ -52,16 +107,20 @@ class DataHolder {
         return retObj;
     }
 
-    public List<ArgumentMatcher> getLocalArgumentMatchersList() {
+    List<ArgumentMatcher> getLocalArgumentMatchersList() {
         return localArgumentMatchersList;
     }
 
-    public boolean isWithMatchers() {
+    boolean isWithMatchers() {
         return withMatchers;
     }
 
-    public boolean isRealMethod() {
-        return realMethod;
+    DelegationStrategy getDelegationStrategy() {
+        return delegationStrategy;
+    }
+
+    Throwable getToThrow() {
+        return toThrow;
     }
 
     @Override
@@ -70,9 +129,10 @@ class DataHolder {
                 "args=" + Arrays.toString(args) +
                 ", method=" + method +
                 ", retObj=" + retObj +
-                ", realMethod=" + realMethod +
+                ", delegationStrategy=" + delegationStrategy +
                 ", withMatchers=" + withMatchers +
                 ", localArgumentMatchersList=" + localArgumentMatchersList +
-                "}";
+                ", toThrow=" + toThrow +
+                '}';
     }
 }

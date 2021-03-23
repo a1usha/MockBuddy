@@ -11,4 +11,8 @@ public class Stubber<T> {
     public void invokeRealMethod() {
         MockingInfo.getLastMockInvocationHandler().setRealMethodInvocation();
     }
+
+    public void thenThrow(Throwable throwable) {
+        MockingInfo.getLastMockInvocationHandler().setThrowable(throwable);
+    }
 }
