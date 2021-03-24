@@ -21,8 +21,8 @@ import java.util.concurrent.Callable;
 public class MockInvocationHandler {
 
     private final List<DataHolder> dataHolders = new ArrayList<>();
-    private Method lastMethod;
-    private Object[] lastArgs;
+    private Method lastMethod = null;
+    private Object[] lastArgs = null;
     private final DelegationStrategy delegationStrategy;
 
     public MockInvocationHandler(DelegationStrategy delegationStrategy) {
@@ -34,10 +34,21 @@ public class MockInvocationHandler {
 
         MockingInfo.setLastMockInvocationHandler(this);
 
-        lastMethod = method;
-        lastArgs = args;
+        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
 
-        // checks if the method was already called with the given arguments
+        /*
+        Checks if the current method is called by the owner of the same method.
+        This check avoids stubbing of nested methods of the same class.
+
+        For example, List.contains(obj) calls List.indexOf(obj) inside.
+        According to this check, List.contains() will be stubbed, not indexOf()
+         */
+        if (!stackTraceElements[2].toString().contains(stackTraceElements[3].getClassName())) {
+            lastMethod = method;
+            lastArgs = args;
+        }
+
+        // checks if the method was already called with the given arguments (without argument matchers)
         for (DataHolder dataHolder : dataHolders) {
             if (dataHolder.getMethod().equals(method) && Arrays.deepEquals(dataHolder.getArgs(), args)) {
                 if (!dataHolder.isWithMatchers()) {
@@ -56,6 +67,7 @@ public class MockInvocationHandler {
             }
         }
 
+        // checks if the method was already called with the given arguments (with argument matchers)
         for (DataHolder dataHolder : dataHolders) {
             if (dataHolder.getMethod().equals(method)) {
                 if (dataHolder.isWithMatchers()) {

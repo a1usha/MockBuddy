@@ -1,8 +1,8 @@
-package ru.nsu.sd.MockBuddy.examples;
+package ru.nsu.sd.MockBuddy.testclasses;
 
-public class Test {
+public class TestClass {
 
-    public Test(int a) {
+    public TestClass(int a) {
 
     }
 
