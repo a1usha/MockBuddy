@@ -3,7 +3,7 @@ package ru.nsu.sd.MockBuddy.internal.matching.matchers;
 /**
  * Checks if an argument is equal to some value
  */
-public class EqualsMatcher implements ArgumentMatcher {
+public class EqualsMatcher implements ArgumentMatcher<Object> {
 
     private final Object wanted;
 

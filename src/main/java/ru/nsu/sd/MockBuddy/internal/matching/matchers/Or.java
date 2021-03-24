@@ -4,12 +4,13 @@ package ru.nsu.sd.MockBuddy.internal.matching.matchers;
 /**
  * Performs logical OR with argument matchers
  */
-public class Or implements ArgumentMatcher {
+@SuppressWarnings({"unchecked", "rawtypes"})
+public class Or implements ArgumentMatcher<Object> {
 
     private final ArgumentMatcher m1;
     private final ArgumentMatcher m2;
 
-    public Or(ArgumentMatcher m1, ArgumentMatcher m2) {
+    public Or(ArgumentMatcher<?> m1, ArgumentMatcher<?> m2) {
         this.m1 = m1;
         this.m2 = m2;
     }

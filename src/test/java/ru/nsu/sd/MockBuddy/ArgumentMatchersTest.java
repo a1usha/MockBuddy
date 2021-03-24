@@ -64,4 +64,14 @@ public class ArgumentMatchersTest {
         Assert.assertNull(testClass.foo(11));
     }
 
+    @Test
+    public void geqTest() {
+        MockBuddy.when(testClass.foo(geq(90))).thenReturn("geq");
+
+        Assert.assertEquals("geq", testClass.foo(90));
+        Assert.assertEquals("geq", testClass.foo(91));
+        Assert.assertEquals("geq", testClass.foo(92));
+
+        Assert.assertNull(testClass.foo(89));
+    }
 }

@@ -3,7 +3,7 @@ package ru.nsu.sd.MockBuddy.internal.matching.matchers;
 /**
  * Checks if an argument is of the appropriate type
  */
-public class InstanceMatcher implements ArgumentMatcher {
+public class InstanceMatcher implements ArgumentMatcher<Object> {
 
     private final Class<?> clazz;
 

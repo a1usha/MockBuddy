@@ -3,6 +3,7 @@ package ru.nsu.sd.MockBuddy.internal.matching;
 import ru.nsu.sd.MockBuddy.internal.MockingInfo;
 import ru.nsu.sd.MockBuddy.internal.matching.matchers.ArgumentMatcher;
 import ru.nsu.sd.MockBuddy.internal.matching.matchers.EqualsMatcher;
+import ru.nsu.sd.MockBuddy.internal.matching.matchers.GreaterOrEqual;
 import ru.nsu.sd.MockBuddy.internal.matching.matchers.InstanceMatcher;
 
 import java.util.EmptyStackException;
@@ -557,11 +558,17 @@ public class ArgumentMatchers {
         return 0;
     }
 
+
+    public static int geq(int value) {
+        putMatcher(new GreaterOrEqual<>(value));
+        return 0;
+    }
+
     /**
      * Add argument matcher to the {@link ArgumentMatcherStorage}
      * @param argumentMatcher to put in
      */
-    private static void putMatcher(ArgumentMatcher argumentMatcher) {
+    private static void putMatcher(ArgumentMatcher<?> argumentMatcher) {
         MockingInfo.getArgumentMatcherStorage().addMatcher(argumentMatcher);
     }
 }
