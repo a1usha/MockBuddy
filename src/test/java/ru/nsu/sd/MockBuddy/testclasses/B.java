@@ -1,4 +1,4 @@
-package ru.nsu.sd.MockBuddy.examples;
+package ru.nsu.sd.MockBuddy.testclasses;
 
 public class B {
 

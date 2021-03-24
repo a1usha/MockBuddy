@@ -116,7 +116,7 @@ public class ArgumentMatchers {
      * @return <code>""</code>
      */
     public static String anyString() {
-        putMatcher(new InstanceMatcher(Short.class));
+        putMatcher(new InstanceMatcher(String.class));
         return "";
     }
 
