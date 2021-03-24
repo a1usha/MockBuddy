@@ -25,7 +25,9 @@ public class Main {
     private Cat cat;
 
     @Spy
+    private FieldTest fieldTest;
 
+    @Spy
     private FieldTest ftest = new FieldTest("final field", "static field");
 
     public static void main(String[] args) {

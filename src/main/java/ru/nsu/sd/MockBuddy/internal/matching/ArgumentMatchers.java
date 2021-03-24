@@ -8,16 +8,27 @@ import ru.nsu.sd.MockBuddy.internal.matching.matchers.InstanceMatcher;
 import java.util.EmptyStackException;
 
 /**
- * ru.nsu.sd.MockBuddy.examples.A set of argument matchers that provide flexible
+ * A set of argument matchers that provide flexible
  * configuration of method parameters
  *
  * Will return 123 for any argument
  * MockBuddy.when(someObject.foo(anyInt()).thenReturn(123)
  *
- * Will return 123 only for 3 and 5 as arguments
+ * Will return 321 only for 3 and 5 as arguments
  * MockBuddy.when(someObject.foo(or(equalsTo(3), equalsTo(5))).thenReturn(321)
  */
 public class ArgumentMatchers {
+
+    /**
+     * Any value of specified class
+     *
+     * @param clazz type of object to check with
+     * @return default value of primitive or wrapper or null
+     */
+    public static <T> T anyOf(Class<T> clazz) {
+        putMatcher(new InstanceMatcher(clazz));
+        return PrimitiveDefaultValues.getDefaultValue(clazz);
+    }
 
     /**
      * Any int or any non-null Integer
