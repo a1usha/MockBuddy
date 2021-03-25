@@ -3,12 +3,13 @@ package ru.nsu.sd.MockBuddy.internal.matching.matchers;
 /**
  * Performs logical AND with argument matchers
  */
-public class And implements ArgumentMatcher {
+@SuppressWarnings({"unchecked", "rawtypes"})
+public class And implements ArgumentMatcher<Object> {
 
     private final ArgumentMatcher m1;
     private final ArgumentMatcher m2;
 
-    public And(ArgumentMatcher m1, ArgumentMatcher m2) {
+    public And(ArgumentMatcher<?> m1, ArgumentMatcher<?> m2) {
         this.m1 = m1;
         this.m2 = m2;
     }

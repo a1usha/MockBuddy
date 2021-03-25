@@ -3,6 +3,7 @@ package ru.nsu.sd.MockBuddy;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import ru.nsu.sd.MockBuddy.internal.annotations.Mock;
 import ru.nsu.sd.MockBuddy.testclasses.TestClass;
 
 import static ru.nsu.sd.MockBuddy.internal.matching.ArgumentMatchers.*;
@@ -64,4 +65,50 @@ public class ArgumentMatchersTest {
         Assert.assertNull(testClass.foo(11));
     }
 
+    @Test
+    public void geqTest() {
+        MockBuddy.when(testClass.foo(geq(90))).thenReturn("geq");
+
+        Assert.assertEquals("geq", testClass.foo(90));
+        Assert.assertEquals("geq", testClass.foo(91));
+        Assert.assertEquals("geq", testClass.foo(92));
+
+        Assert.assertNull(testClass.foo(89));
+    }
+
+    @Test
+    public void leqTest() {
+        MockBuddy.when(testClass.foo(leq(90))).thenReturn("leq");
+
+        Assert.assertEquals("leq", testClass.foo(88));
+        Assert.assertEquals("leq", testClass.foo(89));
+        Assert.assertEquals("leq", testClass.foo(90));
+
+        Assert.assertNull(testClass.foo(91));
+    }
+
+    @Test
+    public void gtTest() {
+        MockBuddy.when(testClass.foo(gt(11))).thenReturn("gt");
+
+        Assert.assertEquals("gt", testClass.foo(12));
+        Assert.assertEquals("gt", testClass.foo(13));
+
+        Assert.assertNull(testClass.foo(11));
+    }
+
+    @Test
+    public void ltTest() {
+        MockBuddy.when(testClass.foo(lt(1337))).thenReturn("lt");
+
+        Assert.assertEquals("lt", testClass.foo(1000));
+        Assert.assertEquals("lt", testClass.foo(1));
+
+        Assert.assertNull(testClass.foo(1337));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentException() {
+        MockBuddy.when(testClass.foo(not(123))).thenReturn("broken");
+    }
 }

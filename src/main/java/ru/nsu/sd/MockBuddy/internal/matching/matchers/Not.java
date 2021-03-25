@@ -3,11 +3,12 @@ package ru.nsu.sd.MockBuddy.internal.matching.matchers;
 /**
  * Performs logical NOT with argument matchers
  */
-public class Not implements ArgumentMatcher {
+@SuppressWarnings({"unchecked", "rawtypes"})
+public class Not implements ArgumentMatcher<Object> {
 
     private final ArgumentMatcher m1;
 
-    public Not(ArgumentMatcher m1) {
+    public Not(ArgumentMatcher<?> m1) {
         this.m1 = m1;
     }
 
