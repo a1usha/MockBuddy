@@ -1,10 +1,7 @@
 package ru.nsu.sd.MockBuddy.internal.matching;
 
 import ru.nsu.sd.MockBuddy.internal.MockingInfo;
-import ru.nsu.sd.MockBuddy.internal.matching.matchers.ArgumentMatcher;
-import ru.nsu.sd.MockBuddy.internal.matching.matchers.EqualsMatcher;
-import ru.nsu.sd.MockBuddy.internal.matching.matchers.GreaterOrEqual;
-import ru.nsu.sd.MockBuddy.internal.matching.matchers.InstanceMatcher;
+import ru.nsu.sd.MockBuddy.internal.matching.matchers.*;
 
 import java.util.EmptyStackException;
 
@@ -558,15 +555,65 @@ public class ArgumentMatchers {
         return 0;
     }
 
-
+    /**
+     * Check if int argument greater or equal to the given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
     public static int geq(int value) {
         putMatcher(new GreaterOrEqual<>(value));
         return 0;
     }
 
+    // TODO geq for other primitive types
+
+
+    /**
+     * Check if int argument less or equal to the given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
+    public static int leq(int value) {
+        putMatcher(new LessOrEqual<>(value));
+        return 0;
+    }
+
+    // TODO leq for other primitive types
+
+
+    /**
+     * Check if int argument greater than given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
+    public static int gt(int value) {
+        putMatcher(new GreaterThan<>(value));
+        return 0;
+    }
+
+    // TODO gt for other primitive types
+
+
+    /**
+     * Check if int argument less than given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
+    public static int lt(int value) {
+        putMatcher(new LessThan<>(value));
+        return 0;
+    }
+
+    // TODO lt for other primitive types
+
+
     /**
      * Add argument matcher to the {@link ArgumentMatcherStorage}
-     * @param argumentMatcher to put in
+     * @param argumentMatcher argument matcher to put in
      */
     private static void putMatcher(ArgumentMatcher<?> argumentMatcher) {
         MockingInfo.getArgumentMatcherStorage().addMatcher(argumentMatcher);
