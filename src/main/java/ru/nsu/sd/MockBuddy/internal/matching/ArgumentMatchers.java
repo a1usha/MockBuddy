@@ -566,8 +566,60 @@ public class ArgumentMatchers {
         return 0;
     }
 
-    // TODO geq for other primitive types
+    /**
+     * Check if byte argument greater or equal to the given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
+    public static byte geq(byte value) {
+        putMatcher(new GreaterOrEqual<>(value));
+        return 0;
+    }
 
+    /**
+     * Check if double argument greater or equal to the given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
+    public static double geq(double value) {
+        putMatcher(new GreaterOrEqual<>(value));
+        return 0;
+    }
+
+    /**
+     * Check if float argument greater or equal to the given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
+    public static float geq(float value) {
+        putMatcher(new GreaterOrEqual<>(value));
+        return 0;
+    }
+
+    /**
+     * Check if long argument greater or equal to the given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
+    public static long geq(long value) {
+        putMatcher(new GreaterOrEqual<>(value));
+        return 0;
+    }
+
+    /**
+     * Check if short argument greater or equal to the given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
+    public static short geq(short value) {
+        putMatcher(new GreaterOrEqual<>(value));
+        return 0;
+    }
 
     /**
      * Check if int argument less or equal to the given value
@@ -580,8 +632,60 @@ public class ArgumentMatchers {
         return 0;
     }
 
-    // TODO leq for other primitive types
+    /**
+     * Check if byte argument less or equal to the given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
+    public static byte leq(byte value) {
+        putMatcher(new LessOrEqual<>(value));
+        return 0;
+    }
 
+    /**
+     * Check if double argument less or equal to the given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
+    public static double leq(double value) {
+        putMatcher(new LessOrEqual<>(value));
+        return 0;
+    }
+
+    /**
+     * Check if float argument less or equal to the given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
+    public static float leq(float value) {
+        putMatcher(new LessOrEqual<>(value));
+        return 0;
+    }
+
+    /**
+     * Check if long argument less or equal to the given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
+    public static long leq(long value) {
+        putMatcher(new LessOrEqual<>(value));
+        return 0;
+    }
+
+    /**
+     * Check if short argument less or equal to the given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
+    public static short leq(short value) {
+        putMatcher(new LessOrEqual<>(value));
+        return 0;
+    }
 
     /**
      * Check if int argument greater than given value
@@ -594,8 +698,60 @@ public class ArgumentMatchers {
         return 0;
     }
 
-    // TODO gt for other primitive types
+    /**
+     * Check if byte argument greater than given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
+    public static byte gt(byte value) {
+        putMatcher(new GreaterThan<>(value));
+        return 0;
+    }
 
+    /**
+     * Check if double argument greater than given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
+    public static double gt(double value) {
+        putMatcher(new GreaterThan<>(value));
+        return 0;
+    }
+
+    /**
+     * Check if float argument greater than given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
+    public static float gt(float value) {
+        putMatcher(new GreaterThan<>(value));
+        return 0;
+    }
+
+    /**
+     * Check if long argument greater than given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
+    public static long gt(long value) {
+        putMatcher(new GreaterThan<>(value));
+        return 0;
+    }
+
+    /**
+     * Check if short argument greater than given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
+    public static short gt(short value) {
+        putMatcher(new GreaterThan<>(value));
+        return 0;
+    }
 
     /**
      * Check if int argument less than given value
@@ -608,8 +764,60 @@ public class ArgumentMatchers {
         return 0;
     }
 
-    // TODO lt for other primitive types
+    /**
+     * Check if byte argument less than given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
+    public static byte lt(byte value) {
+        putMatcher(new LessThan<>(value));
+        return 0;
+    }
 
+    /**
+     * Check if double argument less than given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
+    public static double lt(double value) {
+        putMatcher(new LessThan<>(value));
+        return 0;
+    }
+
+    /**
+     * Check if float argument less than given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
+    public static float lt(float value) {
+        putMatcher(new LessThan<>(value));
+        return 0;
+    }
+
+    /**
+     * Check if long argument less than given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
+    public static long lt(long value) {
+        putMatcher(new LessThan<>(value));
+        return 0;
+    }
+
+    /**
+     * Check if short argument less than given value
+     *
+     * @param value value to check with
+     * @return <code>0</code>
+     */
+    public static short lt(short value) {
+        putMatcher(new LessThan<>(value));
+        return 0;
+    }
 
     /**
      * Add argument matcher to the {@link ArgumentMatcherStorage}
