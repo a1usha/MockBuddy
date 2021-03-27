@@ -1,4 +1,4 @@
-## MockBuddy
+# MockBuddy
 
 An academic project that aims to create a framework for unit tests in Java programming language such as [Mockito](https://site.mockito.org/), [jMock](http://jmock.org/), [EasyMock](https://easymock.org/), [PowerMock](https://powermock.github.io/). 
 
