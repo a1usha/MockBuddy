@@ -94,5 +94,8 @@ public class ByteBuddyMockMaker {
         return instance;
 
     }
-}
 
+//    public static <T> T verify(T obj, Integer times, MockInvocationHandler mockInvocationHandler) {
+//        return null;
+//    }
+}

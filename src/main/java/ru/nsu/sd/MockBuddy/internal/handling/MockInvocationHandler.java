@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 
 /**
@@ -21,6 +22,8 @@ import java.util.concurrent.Callable;
 public class MockInvocationHandler {
 
     private final List<DataHolder> dataHolders = new ArrayList<>();
+    private final List<InvocationHolder> invocationHolders = new ArrayList<>();
+
     private Method lastMethod = null;
     private Object[] lastArgs = null;
     private final DelegationStrategy delegationStrategy;
@@ -48,18 +51,34 @@ public class MockInvocationHandler {
             lastArgs = args;
         }
 
+        for (InvocationHolder invocationHolder : invocationHolders) {
+            if (invocationHolder.getMethod().equals(method) && Arrays.deepEquals(invocationHolder.getArgs(), args)) {
+                invocationHolder.increaseCounter();
+            }
+        }
+
+        if (invocationHolders.stream().noneMatch(x -> x.getMethod().equals(method) && Arrays.deepEquals(x.getArgs(), args))) {
+            InvocationHolder holder = new InvocationHolder(method, args);
+            holder.increaseCounter();
+            invocationHolders.add(holder);
+        }
+
+
         // checks if the method was already called with the given arguments (without argument matchers)
         for (DataHolder dataHolder : dataHolders) {
             if (dataHolder.getMethod().equals(method) && Arrays.deepEquals(dataHolder.getArgs(), args)) {
                 if (!dataHolder.isWithMatchers()) {
                     switch (dataHolder.getDelegationStrategy()) {
                         case CALL_REAL_METHOD:
+//                            System.out.println("first call real method");
                             return zuper.call();
 
                         case THROW_EXCEPTION:
+//                            System.out.println("first throw exception");
                             throw dataHolder.getToThrow();
 
                         case RETURN_CUSTOM:
+//                            System.out.println("first return custom");
                             return dataHolder.getRetObj();
 
                     }
@@ -78,8 +97,10 @@ public class MockInvocationHandler {
 
                             match = dataHolder.getLocalArgumentMatchersList().get(i).matches(lastArgs[i]);
                             if (!match) {
-                                if (delegationStrategy == DelegationStrategy.CALL_REAL_METHOD)
+                                if (delegationStrategy == DelegationStrategy.CALL_REAL_METHOD) {
+//                                    System.out.println("let's try here when");
                                     return zuper.call();
+                                }
                                 else
                                     return null;
                             }
@@ -87,18 +108,22 @@ public class MockInvocationHandler {
 
                         switch (dataHolder.getDelegationStrategy()) {
                             case CALL_REAL_METHOD:
+//                                System.out.println("second call real method");
                                 return zuper.call();
 
                             case THROW_EXCEPTION:
+//                                System.out.println("second throw exception");
                                 throw dataHolder.getToThrow();
 
                             case RETURN_CUSTOM:
+//                                System.out.println("second return custom");
                                 return dataHolder.getRetObj();
 
                         }
 
                     } else {
                         // Override matcher
+//                        System.out.println("xz what is this");
                         return null;
                     }
                 }
@@ -113,6 +138,13 @@ public class MockInvocationHandler {
     }
 
     public void setRetObj(Object retObj) {
+
+        // Decrease invocation counter because method was in MockBuddy.when
+        for (InvocationHolder invocationHolder : invocationHolders) {
+            if (invocationHolder.getMethod().equals(lastMethod) && Arrays.deepEquals(invocationHolder.getArgs(), lastArgs)) {
+                invocationHolder.decreaseCounter();
+            }
+        }
 
         // Remove existing rule with same method and arguments
         dataHolders.removeIf(dh -> dh.getMethod().equals(lastMethod) && Arrays.deepEquals(dh.getArgs(), lastArgs));
@@ -136,6 +168,13 @@ public class MockInvocationHandler {
 
     public void setThrowable(Throwable throwable) {
 
+        // Decrease invocation counter because method was in MockBuddy.when
+        for (InvocationHolder invocationHolder : invocationHolders) {
+            if (invocationHolder.getMethod().equals(lastMethod) && Arrays.deepEquals(invocationHolder.getArgs(), lastArgs)) {
+                invocationHolder.decreaseCounter();
+            }
+        }
+
         // Remove existing rule with same method and arguments
         dataHolders.removeIf(dh -> dh.getMethod().equals(lastMethod) && Arrays.deepEquals(dh.getArgs(), lastArgs));
 
@@ -158,6 +197,13 @@ public class MockInvocationHandler {
 
     public void setRealMethodInvocation() {
 
+        // Decrease invocation counter because method was in MockBuddy.when
+        for (InvocationHolder invocationHolder : invocationHolders) {
+            if (invocationHolder.getMethod().equals(lastMethod) && Arrays.deepEquals(invocationHolder.getArgs(), lastArgs)) {
+                invocationHolder.decreaseCounter();
+            }
+        }
+
         // Remove existing rule with same method and arguments
         dataHolders.removeIf(dh -> dh.getMethod().equals(lastMethod) && Arrays.deepEquals(dh.getArgs(), lastArgs));
 
@@ -175,6 +221,15 @@ public class MockInvocationHandler {
         } else {
             // Else create default rule with return object
             dataHolders.add(new DataHolder(lastMethod, lastArgs));
+        }
+    }
+
+    public int getInvocationCounter() {
+
+        if (invocationHolders.stream().noneMatch(x -> x.getMethod().equals(lastMethod) && Arrays.deepEquals(x.getArgs(), lastArgs))) {
+            return 0;
+        } else {
+            return Objects.requireNonNull(invocationHolders.stream().filter(x -> x.getMethod().equals(lastMethod) && Arrays.deepEquals(x.getArgs(), lastArgs)).findFirst().orElse(null)).getInvocationCounter();
         }
     }
 }

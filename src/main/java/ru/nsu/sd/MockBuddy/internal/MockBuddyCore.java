@@ -21,4 +21,8 @@ public class MockBuddyCore {
     public <T> Stubber<T> when(T obj) {
         return new Stubber<>();
     }
+
+//    public <T> T verify(T obj, Integer times) {
+//        return ByteBuddyMockMaker.verify(obj, times, MockingInfo.getLastMockInvocationHandler());
+//    }
 }
