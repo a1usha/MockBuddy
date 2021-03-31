@@ -3,18 +3,21 @@ package ru.nsu.sd.MockBuddy;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import ru.nsu.sd.MockBuddy.internal.annotations.Mock;
+import ru.nsu.sd.MockBuddy.internal.annotations.MockInitializer;
 import ru.nsu.sd.MockBuddy.testclasses.TestClass;
 
 import static ru.nsu.sd.MockBuddy.internal.matching.ArgumentMatchers.*;
 
 public class VerifyTest {
 
+    @Mock
     private TestClass testClass;
     private TestClass testClass2;
 
     @Before
     public void setup() {
-        testClass = MockBuddy.mock(TestClass.class);
+        MockInitializer.initMocks(this);
         testClass2 = MockBuddy.mock(TestClass.class);
     }
 
