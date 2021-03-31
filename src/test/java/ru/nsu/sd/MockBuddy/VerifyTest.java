@@ -52,16 +52,4 @@ public class VerifyTest {
 
 
     }
-
-    @Test
-    public void test_2() {
-
-        // 123 || 333
-        MockBuddy.when(testClass.bar(123, 3)).thenReturn(11);
-        MockBuddy.when(testClass2.bar(7, 3)).thenReturn(17);
-
-        MockBuddy.verify(testClass, 0).bar(123, 3);
-        MockBuddy.verify(testClass2, 0).bar(7, 3);
-
-    }
 }

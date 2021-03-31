@@ -32,8 +32,4 @@ public class MockBuddy {
         return mockBuddyCore.verify(obj, times);
     }
 
-    public static int temporaryVerify() {
-        return MockingInfo.getLastMockInvocationHandler().getInvocationCounter();
-    }
-
 }
