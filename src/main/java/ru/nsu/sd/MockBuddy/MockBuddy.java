@@ -1,6 +1,7 @@
 package ru.nsu.sd.MockBuddy;
 
 import ru.nsu.sd.MockBuddy.internal.MockBuddyCore;
+import ru.nsu.sd.MockBuddy.internal.MockingInfo;
 import ru.nsu.sd.MockBuddy.internal.stubbing.Stubber;
 
 public class MockBuddy {
@@ -26,4 +27,9 @@ public class MockBuddy {
     public static <T> Stubber<T> when(T obj) {
         return mockBuddyCore.when(obj);
     }
+
+    public static <T> T verify(T obj, Integer times) {
+        return mockBuddyCore.verify(obj, times);
+    }
+
 }

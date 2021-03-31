@@ -8,7 +8,9 @@ import org.objenesis.ObjenesisStd;
 import org.objenesis.instantiator.ObjectInstantiator;
 import ru.nsu.sd.MockBuddy.internal.MockingInfo;
 import ru.nsu.sd.MockBuddy.internal.handling.DelegationStrategy;
+import ru.nsu.sd.MockBuddy.internal.handling.InvocationHolder;
 import ru.nsu.sd.MockBuddy.internal.handling.MockInvocationHandler;
+import ru.nsu.sd.MockBuddy.internal.handling.VerificationHandler;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -94,5 +96,23 @@ public class ByteBuddyMockMaker {
         return instance;
 
     }
-}
 
+    public static <T> T verify(T obj, Integer times) {
+
+        VerificationHandler verificationHandler = new VerificationHandler(obj, times);
+
+        @SuppressWarnings("unchecked")
+        Class<? extends T> byteBuddy = new ByteBuddy()
+                .subclass((Class<T>) obj.getClass().getSuperclass())
+                .method(ElementMatchers.any())
+                .intercept(MethodDelegation.to(verificationHandler))
+                .make()
+                .load(ClassLoader.getSystemClassLoader())
+                .getLoaded();
+
+        // Create object without calling constructor
+        Objenesis objenesis = new ObjenesisStd();
+        ObjectInstantiator<? extends T> thingyInstantiator = objenesis.getInstantiatorOf(byteBuddy);
+        return (T) thingyInstantiator.newInstance();
+    }
+}
