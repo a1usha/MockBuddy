@@ -28,9 +28,9 @@ public class MockBuddy {
         return mockBuddyCore.when(obj);
     }
 
-//    public static <T> T verify(T obj, Integer times) {
-//        return mockBuddyCore.verify(obj, times);
-//    }
+    public static <T> T verify(T obj, Integer times) {
+        return mockBuddyCore.verify(obj, times);
+    }
 
     public static int temporaryVerify() {
         return MockingInfo.getLastMockInvocationHandler().getInvocationCounter();

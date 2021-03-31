@@ -2,6 +2,7 @@ package ru.nsu.sd.MockBuddy.internal;
 
 import ru.nsu.sd.MockBuddy.internal.creation.ByteBuddyMockMaker;
 import ru.nsu.sd.MockBuddy.internal.handling.DelegationStrategy;
+import ru.nsu.sd.MockBuddy.internal.handling.VerificationHandler;
 import ru.nsu.sd.MockBuddy.internal.stubbing.Stubber;
 
 public class MockBuddyCore {
@@ -22,7 +23,7 @@ public class MockBuddyCore {
         return new Stubber<>();
     }
 
-//    public <T> T verify(T obj, Integer times) {
-//        return ByteBuddyMockMaker.verify(obj, times, MockingInfo.getLastMockInvocationHandler());
-//    }
+    public <T> T verify(T obj, Integer times) {
+        return ByteBuddyMockMaker.verify(obj, times);
+    }
 }

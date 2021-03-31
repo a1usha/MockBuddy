@@ -1,9 +1,6 @@
 package ru.nsu.sd.MockBuddy.internal.handling;
 
-import net.bytebuddy.implementation.bind.annotation.AllArguments;
-import net.bytebuddy.implementation.bind.annotation.Origin;
-import net.bytebuddy.implementation.bind.annotation.RuntimeType;
-import net.bytebuddy.implementation.bind.annotation.SuperCall;
+import net.bytebuddy.implementation.bind.annotation.*;
 import ru.nsu.sd.MockBuddy.internal.MockingInfo;
 import ru.nsu.sd.MockBuddy.internal.matching.matchers.ArgumentMatcher;
 
@@ -22,18 +19,28 @@ import java.util.concurrent.Callable;
 public class MockInvocationHandler {
 
     private final List<DataHolder> dataHolders = new ArrayList<>();
-    private final List<InvocationHolder> invocationHolders = new ArrayList<>();
+    private List<InvocationHolder> invocationHolders = new ArrayList<>();
 
     private Method lastMethod = null;
     private Object[] lastArgs = null;
     private final DelegationStrategy delegationStrategy;
+
+    private Object obj = null;
 
     public MockInvocationHandler(DelegationStrategy delegationStrategy) {
         this.delegationStrategy = delegationStrategy;
     }
 
     @RuntimeType
-    public Object invoke(@SuperCall Callable<?> zuper, @Origin Method method, @AllArguments Object[] args) throws Throwable {
+    public Object invoke(@SuperCall Callable<?> zuper, @Origin Method method, @AllArguments Object[] args, @This Object obj) throws Throwable {
+
+        this.obj = obj;
+
+        invocationHolders = MockingInfo.getListOfHolders(obj);
+
+        if (invocationHolders == null) {
+            invocationHolders = new ArrayList<InvocationHolder>();
+        }
 
         MockingInfo.setLastMockInvocationHandler(this);
 
@@ -63,6 +70,7 @@ public class MockInvocationHandler {
             invocationHolders.add(holder);
         }
 
+        MockingInfo.addHolders(obj, invocationHolders);
 
         // checks if the method was already called with the given arguments (without argument matchers)
         for (DataHolder dataHolder : dataHolders) {
@@ -139,12 +147,20 @@ public class MockInvocationHandler {
 
     public void setRetObj(Object retObj) {
 
+        invocationHolders = MockingInfo.getListOfHolders(obj);
+
+        if (invocationHolders == null) {
+            invocationHolders = new ArrayList<InvocationHolder>();
+        }
+
         // Decrease invocation counter because method was in MockBuddy.when
         for (InvocationHolder invocationHolder : invocationHolders) {
             if (invocationHolder.getMethod().equals(lastMethod) && Arrays.deepEquals(invocationHolder.getArgs(), lastArgs)) {
                 invocationHolder.decreaseCounter();
             }
         }
+
+        MockingInfo.addHolders(obj, invocationHolders);
 
         // Remove existing rule with same method and arguments
         dataHolders.removeIf(dh -> dh.getMethod().equals(lastMethod) && Arrays.deepEquals(dh.getArgs(), lastArgs));
@@ -168,12 +184,20 @@ public class MockInvocationHandler {
 
     public void setThrowable(Throwable throwable) {
 
+        invocationHolders = MockingInfo.getListOfHolders(obj);
+
+        if (invocationHolders == null) {
+            invocationHolders = new ArrayList<InvocationHolder>();
+        }
+
         // Decrease invocation counter because method was in MockBuddy.when
         for (InvocationHolder invocationHolder : invocationHolders) {
             if (invocationHolder.getMethod().equals(lastMethod) && Arrays.deepEquals(invocationHolder.getArgs(), lastArgs)) {
                 invocationHolder.decreaseCounter();
             }
         }
+
+        MockingInfo.addHolders(obj, invocationHolders);
 
         // Remove existing rule with same method and arguments
         dataHolders.removeIf(dh -> dh.getMethod().equals(lastMethod) && Arrays.deepEquals(dh.getArgs(), lastArgs));
@@ -197,12 +221,20 @@ public class MockInvocationHandler {
 
     public void setRealMethodInvocation() {
 
+        invocationHolders = MockingInfo.getListOfHolders(obj);
+
+        if (invocationHolders == null) {
+            invocationHolders = new ArrayList<InvocationHolder>();
+        }
+
         // Decrease invocation counter because method was in MockBuddy.when
         for (InvocationHolder invocationHolder : invocationHolders) {
             if (invocationHolder.getMethod().equals(lastMethod) && Arrays.deepEquals(invocationHolder.getArgs(), lastArgs)) {
                 invocationHolder.decreaseCounter();
             }
         }
+
+        MockingInfo.addHolders(obj, invocationHolders);
 
         // Remove existing rule with same method and arguments
         dataHolders.removeIf(dh -> dh.getMethod().equals(lastMethod) && Arrays.deepEquals(dh.getArgs(), lastArgs));
@@ -225,6 +257,8 @@ public class MockInvocationHandler {
     }
 
     public int getInvocationCounter() {
+
+        invocationHolders = MockingInfo.getListOfHolders(obj);
 
         if (invocationHolders.stream().noneMatch(x -> x.getMethod().equals(lastMethod) && Arrays.deepEquals(x.getArgs(), lastArgs))) {
             return 0;
